@@ -19,7 +19,7 @@ int dataPin1 = 9;
 int dataPin2 = 10;
 int dataPin3 = 11;
 
-//分别将十位数和个位数转换为二进制
+//将十位数转换为二进制
 int tens(int num)
 {
   int result;
@@ -28,7 +28,7 @@ int tens(int num)
   else if (num / 10>7) result <<= 1;
   return result;
 }
-
+//将个位数转换为二进制
 int single(int num)
 {
   int result;
@@ -56,7 +56,7 @@ void setup() {
 
 void loop() {
 
-  int chk=DHT11.read(DHT11PIN);
+  int chk=DHT11.read(DHT11PIN);//读取DHT11接收到的温湿度数据
 
   for(int HR=0;HR<24;HR++){
   digitalWrite(latchPin1, LOW);
@@ -99,14 +99,14 @@ void loop() {
           for(int N=0;N<10;N++) {
           Serial.println((float)DHT11.humidity,2);
           digitalWrite(latchPin3, LOW);
-          shiftOut(dataPin3, clockPin3, MSBFIRST,(single(DHT11.humidity)>>8));
+          shiftOut(dataPin3, clockPin3, MSBFIRST,(single(DHT11.humidity)>>8));//向控制秒钟位的移位寄存器输入湿度的数据
           shiftOut(dataPin3, clockPin3, MSBFIRST,single(DHT11.humidity)); 
           shiftOut(dataPin3, clockPin3, MSBFIRST,(tens(DHT11.humidity)>>8)); 
           shiftOut(dataPin3, clockPin3, MSBFIRST,tens(DHT11.humidity));
           digitalWrite(latchPin3, HIGH);
           irrecv.resume();
           delay(1000);
-          SEC++;
+          SEC++;//使时钟在显示温度/湿度时继续计时
           if(SEC==60)
           {
             SEC=0;
@@ -117,7 +117,7 @@ void loop() {
           for(int N=0;N<10;N++) {
           Serial.println((float)DHT11.temperature,2);
           digitalWrite(latchPin3, LOW);
-          shiftOut(dataPin3, clockPin3, MSBFIRST,(single(DHT11.temperature)>>8));
+          shiftOut(dataPin3, clockPin3, MSBFIRST,(single(DHT11.temperature)>>8));//向控制秒钟为的移位寄存器输入温度的数据
           shiftOut(dataPin3, clockPin3, MSBFIRST,single(DHT11.temperature)); 
           shiftOut(dataPin3, clockPin3, MSBFIRST,(tens(DHT11.temperature)>>8)); 
           shiftOut(dataPin3, clockPin3, MSBFIRST,tens(DHT11.temperature));
